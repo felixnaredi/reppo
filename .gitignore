@@ -1,0 +1,13 @@
+# Temp file postfix
+*~
+
+# macOS
+.DS_store
+
+# vscode
+.vscode
+.vs
+
+# cmake build directory
+build
+

@@ -13,19 +13,15 @@
 
 namespace reppo {
 
-#define fileprivate reppo_Write_hpp
+#define fileprivate reppo_Write_fileprivate
 namespace fileprivate {
 
-template <class Stream, class Tuple, std::size_t... Is>
-void write(Stream& stream, const Tuple& tuple, std::index_sequence<Is...>) {
-  ((stream << std::get<Is>(tuple)), ...);
-}
+template <class Stream> constexpr void write(Stream& stream) {}
 
-template <class Stream, class... Types>
-void write(Stream& stream, const std::tuple<const Types&...>& tuple) {
-  using Tuple = std::tuple<Types...>;
-  write(
-      stream, tuple, std::make_index_sequence<std::tuple_size<Tuple>::value>());
+template <class Stream, class T, class... Types>
+constexpr void write(Stream& stream, const T& head, const Types&... tail) {
+  stream << head;
+  write(stream, tail...);
 }
 
 template <class T, class Char> struct Fill {
@@ -47,11 +43,12 @@ std::basic_ostream<Char>& operator<<(std::basic_ostream<Char>& stream,
 } // namespace fileprivate
 
 template <class Stream, class... Types>
-void write(Stream& stream, const Types&... args) {
-  fileprivate::write(stream, std::forward_as_tuple(args...));
+constexpr void write(Stream& stream, const Types&... args) {
+  fileprivate::write(stream, args...);
 }
 
-template <class T, class Char> auto fill(T value, std::size_t length, Char c) {
+template <class T, class Char>
+constexpr auto fill(T value, std::size_t length, Char c) {
   return fileprivate::Fill(value, length, c);
 }
 
